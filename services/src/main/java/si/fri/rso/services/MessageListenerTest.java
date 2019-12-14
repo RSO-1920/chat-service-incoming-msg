@@ -1,4 +1,4 @@
-package si.fri.rso.mongo.services;
+package si.fri.rso.services;
 
 import org.eclipse.paho.client.mqttv3.*;
 

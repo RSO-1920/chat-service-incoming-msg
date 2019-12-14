@@ -1,4 +1,4 @@
-package si.fri.rso.mongo.lib.responses;
+package si.fri.rso.lib.responses;
 
 public class ResponseDTO {
     private Integer status;

@@ -2,7 +2,7 @@ package si.fri.rso.api.v1;
 
 import si.fri.rso.api.v1.controller.IncomingMsgController;
 import si.fri.rso.mongo.MongoConnection;
-import si.fri.rso.mongo.services.MessageListenerTest;
+import si.fri.rso.services.MessageListenerTest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

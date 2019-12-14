@@ -3,15 +3,17 @@ package si.fri.rso.api.v1.controller;
 
 import com.google.gson.Gson;
 import si.fri.rso.api.v1.MainController;
-import si.fri.rso.mongo.MongoQuery;
-import si.fri.rso.mongo.lib.MessageObject;
-import si.fri.rso.mongo.services.MessageToMqttBean;
+import si.fri.rso.lib.MongoMessageObject;
+import si.fri.rso.mongo.MongoQueryBean;
+import si.fri.rso.lib.MessageObject;
+import si.fri.rso.services.MessageToMqttBean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @ApplicationScoped
 @Path("/msg")
@@ -23,12 +25,25 @@ public class IncomingMsgController extends MainController {
     private MessageToMqttBean messageToMqttBean;
 
     @Inject
-    private MongoQuery mongoQuery;
+    private MongoQueryBean mongoQuery;
 
     @GET
-    public Response getChannelMessages(){
+    public Response getAllMessages(){
+        List<MongoMessageObject> mongoMessageObjectList = this.mongoQuery.getAllMessages();
 
-        return Response.status(200).entity("ok").build();
+        return Response.status(200).entity(this.responseOk("", mongoMessageObjectList)).build();
+    }
+
+    @GET
+    @Path("{channelId}")
+    public Response getMessagesOnChannel(@PathParam("channelId") Integer channelId){
+        if (channelId == null) {
+            return  Response.status(400).entity(this.responseError(400, "channel id not provided")).build();
+        }
+
+        List<MongoMessageObject> mongoMessageObjectList = this.mongoQuery.getMessagesOnChannel(channelId);
+
+        return Response.status(200).entity(this.responseOk("", mongoMessageObjectList)).build();
     }
 
     @POST
@@ -41,8 +56,6 @@ public class IncomingMsgController extends MainController {
         }
 
         boolean isSendToMessageQueue = this.messageToMqttBean.sendMessageToMqtt(messageObject);
-
-        this.mongoQuery.getAllMessages();
 
         return Response.status(200).entity(this.responseOk("message send", isSendToMessageQueue)).build();
     }
