@@ -3,6 +3,7 @@ package si.fri.rso.api.v1.controller;
 
 import com.google.gson.Gson;
 import si.fri.rso.api.v1.MainController;
+import si.fri.rso.lib.MessageStatuses;
 import si.fri.rso.lib.MongoMessageObject;
 import si.fri.rso.mongo.MongoQueryBean;
 import si.fri.rso.lib.MessageObject;
@@ -56,7 +57,9 @@ public class IncomingMsgController extends MainController {
         }
 
         boolean isSendToMessageQueue = this.messageToMqttBean.sendMessageToMqtt(messageObject);
+        boolean isInsertedInMongoDB = this.mongoQuery.insertNewMessage(messageObject);
+        MessageStatuses messageStatuses = new MessageStatuses(isSendToMessageQueue, isInsertedInMongoDB);
 
-        return Response.status(200).entity(this.responseOk("message send", isSendToMessageQueue)).build();
+        return Response.status(200).entity(this.responseOk("message send", messageStatuses)).build();
     }
 }

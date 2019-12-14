@@ -1,10 +1,12 @@
 package si.fri.rso.mongo;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import si.fri.rso.lib.MessageObject;
 import si.fri.rso.lib.MongoMessageObject;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -35,12 +37,6 @@ public class MongoQueryBean {
                                                                         doc.get("message").toString(),
                                                                         doc.get("userName").toString(),
                                                                         Integer.valueOf(doc.get("channelId").toString()) );
-
-            /*System.out.println(doc.get("message").toString());
-            System.out.println(doc.get("userName").toString());
-            System.out.println( Integer.valueOf(doc.get("channelId").toString()));
-            System.out.println( doc.get("_id").toString());
-            System.out.println(doc);*/
             mongoMessageObjectList.add(messageObject);
         }
         return mongoMessageObjectList;
@@ -69,6 +65,22 @@ public class MongoQueryBean {
         }
 
         return mongoMessageObjectList;
+    }
+
+    public boolean insertNewMessage(MessageObject messageObject) {
+        MongoDatabase database = mongoConnection.getDatabase();
+        MongoCollection<Document> collection = database.getCollection("messages");
+        try {
+            Document doc = new Document();
+            doc.put("message", messageObject.getMessage());
+            doc.put("userName", messageObject.getUserName());
+            doc.put("channelId", messageObject.getChannelId());
+            collection.insertOne(doc);
+            return true;
+        } catch (MongoException | ClassCastException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }
