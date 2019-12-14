@@ -1,4 +1,4 @@
-package si.fri.rso.services;
+package si.fri.rso.mongo.services;
 
 import com.google.gson.Gson;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -6,7 +6,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import si.fri.rso.lib.MessageObject;
+import si.fri.rso.mongo.lib.MessageObject;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;

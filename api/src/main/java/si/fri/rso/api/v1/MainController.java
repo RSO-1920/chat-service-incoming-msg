@@ -1,7 +1,7 @@
 package si.fri.rso.api.v1;
 
 
-import si.fri.rso.lib.responses.ResponseDTO;
+import si.fri.rso.mongo.lib.responses.ResponseDTO;
 
 public class MainController {
 

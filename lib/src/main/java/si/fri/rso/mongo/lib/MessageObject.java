@@ -1,4 +1,4 @@
-package si.fri.rso.lib;
+package si.fri.rso.mongo.lib;
 
 public class MessageObject {
     private String message;

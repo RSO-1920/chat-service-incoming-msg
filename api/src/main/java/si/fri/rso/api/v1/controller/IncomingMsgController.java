@@ -1,15 +1,11 @@
-package si.fri.rso.api.v1.controllers;
+package si.fri.rso.api.v1.controller;
 
 
 import com.google.gson.Gson;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import si.fri.rso.api.v1.MainController;
-import si.fri.rso.lib.MessageObject;
-import si.fri.rso.services.MessageToMqttBean;
+import si.fri.rso.mongo.MongoQuery;
+import si.fri.rso.mongo.lib.MessageObject;
+import si.fri.rso.mongo.services.MessageToMqttBean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,6 +21,9 @@ public class IncomingMsgController extends MainController {
 
     @Inject
     private MessageToMqttBean messageToMqttBean;
+
+    @Inject
+    private MongoQuery mongoQuery;
 
     @GET
     public Response getChannelMessages(){
@@ -42,6 +41,8 @@ public class IncomingMsgController extends MainController {
         }
 
         boolean isSendToMessageQueue = this.messageToMqttBean.sendMessageToMqtt(messageObject);
+
+        this.mongoQuery.getAllMessages();
 
         return Response.status(200).entity(this.responseOk("message send", isSendToMessageQueue)).build();
     }
