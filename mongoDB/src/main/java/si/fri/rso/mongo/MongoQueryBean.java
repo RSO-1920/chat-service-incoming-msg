@@ -12,7 +12,6 @@ import si.fri.rso.lib.MongoMessageObject;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @ApplicationScoped
@@ -29,14 +28,11 @@ public class MongoQueryBean {
         FindIterable<Document> iterDoc = collection.find();
         List<MongoMessageObject> mongoMessageObjectList = new ArrayList<MongoMessageObject>();
 
-        Iterator itMessages = iterDoc.iterator();
-
-        while (itMessages.hasNext()) {
-            Document doc = (Document) itMessages.next();
+        for (Document doc : iterDoc) {
             MongoMessageObject messageObject = new MongoMessageObject(doc.get("_id").toString(),
-                                                                        doc.get("message").toString(),
-                                                                        doc.get("userName").toString(),
-                                                                        Integer.valueOf(doc.get("channelId").toString()) );
+                    doc.get("message").toString(),
+                    doc.get("userName").toString(),
+                    Integer.valueOf(doc.get("channelId").toString()));
             mongoMessageObjectList.add(messageObject);
         }
         return mongoMessageObjectList;
@@ -53,14 +49,12 @@ public class MongoQueryBean {
         BasicDBObject whereQuery = new BasicDBObject();
         whereQuery.put("channelId", channelId);
         FindIterable<Document> iterDoc = collection.find(whereQuery);
-        Iterator itMessages = iterDoc.iterator();
 
-        while (itMessages.hasNext()) {
-            Document doc = (Document) itMessages.next();
+        for (Document doc : iterDoc) {
             MongoMessageObject messageObject = new MongoMessageObject(doc.get("_id").toString(),
                     doc.get("message").toString(),
                     doc.get("userName").toString(),
-                    Integer.valueOf(doc.get("channelId").toString()) );
+                    Integer.valueOf(doc.get("channelId").toString()));
             mongoMessageObjectList.add(messageObject);
         }
 
