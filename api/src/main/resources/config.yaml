@@ -45,6 +45,8 @@ kumuluzee:
                               </Root>
                           </Loggers>
                       </Configuration>'
+  openapi-mp:
+    enabled: true
 app-properties:
   mqtt-broker:
     url-connection: tcp://35.225.233.75:1883

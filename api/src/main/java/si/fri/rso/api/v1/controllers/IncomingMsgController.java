@@ -1,5 +1,10 @@
 package si.fri.rso.api.v1.controllers;
 import com.google.gson.Gson;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.microprofile.metrics.annotation.Counted;
@@ -8,6 +13,7 @@ import org.eclipse.microprofile.metrics.annotation.Timed;
 import si.fri.rso.api.v1.MainController;
 import si.fri.rso.lib.MessageStatuses;
 import si.fri.rso.lib.MongoMessageObject;
+import si.fri.rso.lib.responses.ResponseDTO;
 import si.fri.rso.mongo.MongoQueryBean;
 import si.fri.rso.lib.MessageObject;
 import si.fri.rso.services.MessageToMqttBean;
@@ -33,6 +39,12 @@ public class IncomingMsgController extends MainController {
     private MongoQueryBean mongoQuery;
 
     @GET
+    @Operation(description = "Get all messages", summary = "Get msg", tags = "get, msg, all", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "get all msg",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = MongoMessageObject.class)))
+            )
+    })
     @Timed(name = "incomingMsg_time_get")
     @Counted(name = "incomingMsg_counted_get")
     @Metered(name = "incomingMsg_metered_get")
@@ -44,9 +56,15 @@ public class IncomingMsgController extends MainController {
     }
 
     @GET
-    @Timed(name = "incomingMsg_time_get_one")
-    @Counted(name = "incomingMsg_counted_get_one")
-    @Metered(name = "incomingMsg_metered_get_one")
+    @Operation(description = "Get message channel", summary = "Get msg channel", tags = "get, msg, channel", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "get messages on channel",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = MongoMessageObject.class)))
+            )
+    })
+    @Timed(name = "incomingMsg_time_get_channel")
+    @Counted(name = "incomingMsg_counted_get_channel")
+    @Metered(name = "incomingMsg_metered_get_channel")
     @Path("{channelId}")
     public Response getMessagesOnChannel(@PathParam("channelId") Integer channelId){
 
@@ -61,6 +79,16 @@ public class IncomingMsgController extends MainController {
     }
 
     @POST
+    @Operation(description = "Post msg on channel", summary = "Post msg", tags = "post, msg", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "post msg success",
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))
+            ),
+            @ApiResponse(responseCode = "400",
+                    description = "No params given",
+                    content = @Content(schema = @Schema(implementation = ResponseDTO.class))
+            )
+    })
     @Timed(name = "incomingMsg_time_post")
     @Counted(name = "incomingMsg_counted_post")
     @Metered(name = "incomingMsg_metered_post")
