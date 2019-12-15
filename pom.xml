@@ -13,6 +13,7 @@
         <module>lib</module>
         <module>services</module>
         <module>mongoDB</module>
+        <module>config</module>
     </modules>
 
 

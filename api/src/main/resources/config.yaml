@@ -45,3 +45,10 @@ kumuluzee:
                               </Root>
                           </Loggers>
                       </Configuration>'
+app-properties:
+  mqtt-broker:
+    url-connection: tcp://35.225.233.75:1883
+    topic: java/message
+  mongo:
+    url-connection: mongodb://user:123456a@ds255728.mlab.com:55728/rso1920-messages?retryWrites=false
+    database: rso1920-messages

@@ -5,32 +5,37 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
+import si.fri.rso.config.AppConfigProperties;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.CDI;
 
 @ApplicationScoped
 public class IsMongoUpCheck implements HealthCheck {
 
     @Override
     public HealthCheckResponse call() {
+
+        AppConfigProperties appConfigProperties = CDI.current().select(AppConfigProperties.class).get();
+
         try {
-            MongoClientURI uri = new MongoClientURI("mongodb://user:123456a@ds255728.mlab.com:55728/rso1920-messages?retryWrites=false");
+            MongoClientURI uri = new MongoClientURI(appConfigProperties.getMongoUrlConnection());
             MongoClient mongo = new MongoClient( uri );
 
             System.out.println("Connected to the database successfully");
-            MongoDatabase database = mongo.getDatabase("rso1920-messages");
+            MongoDatabase database = mongo.getDatabase(appConfigProperties.getMongoDatabase());
 
             return HealthCheckResponse
                     .named(IsMongoUpCheck.class.getSimpleName())
                     .up()
-                    .withData("mongoURI", "ds255728.mlab.com:55728/rso1920-messages")
+                    .withData("mongoURI", appConfigProperties.getMongoUrlConnection().split("@")[1])
                     .build();
 
         } catch (Exception e) {
             return HealthCheckResponse
                     .named(IsMongoUpCheck.class.getSimpleName())
                     .down()
-                    .withData("mongoURI", "ds255728.mlab.com:55728/rso1920-messages")
+                    .withData("mongoURI", appConfigProperties.getMongoUrlConnection().split("@")[1])
                     .build();
         }
     }

@@ -6,13 +6,18 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import si.fri.rso.config.AppConfigProperties;
 import si.fri.rso.lib.MessageObject;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 @ApplicationScoped
 public class MessageToMqttBean {
+
+    @Inject
+    private AppConfigProperties appConfigProperties;
 
     @PostConstruct
     public void  init(){
@@ -20,10 +25,10 @@ public class MessageToMqttBean {
 
     public Boolean sendMessageToMqtt(MessageObject messageObject) {
         Gson gson = new Gson();
-        String topic        = "java/message";
+        String topic        = appConfigProperties.getMqttTopic();
         String content      = gson.toJson(messageObject);;
         int qos             = 2;
-        String broker       = "tcp://35.225.233.75:1883";
+        String broker       = appConfigProperties.getMqttUrlConnection();
         String clientId     = "JavaMessage";
         MemoryPersistence persistence = new MemoryPersistence();
         try {
