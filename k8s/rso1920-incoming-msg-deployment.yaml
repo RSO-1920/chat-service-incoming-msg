@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rso1920-incoming-msg-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rso1920-incoming-msg
+  template:
+    metadata:
+      labels:
+        app: rso1920-incoming-msg
+    spec:
+      containers:
+        - image: rso1920/incomingmsg:latest
+          name: rso1920-incoming-msg
+          env:
+            - name: KUMULUZEE_DISCOVERY_ETCD_HOSTS
+              value: http://etcd:2379
+            - name: KUMULUZEE_CONFIG_ETCD_HOSTS
+              value: http://etcd:2379
+            - name: KUMULUZEE_SERVER_BASEURL
+              value: http://10.28.13.31:8090
+            - name: KUMULUZEE_HEALTH_CHECKS_ETCDHEALTHCHECK_CONNECTIONURL
+              value: http://etcd:2379/health
+          ports:
+            - containerPort: 8090
+              name: incoming-msg
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: incoming-msg
+            initialDelaySeconds: 60
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: incoming-msg
+            initialDelaySeconds: 60
+            periodSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rso1920-incoming-msg
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8090
+      protocol: TCP
+      targetPort: incoming-msg
+  selector:
+    app: rso1920-incoming-msg
