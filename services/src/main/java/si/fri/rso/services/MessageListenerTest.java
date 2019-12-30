@@ -13,7 +13,7 @@ public class MessageListenerTest implements MqttCallback {
     public void init(@Observes @Initialized(ApplicationScoped.class) Object o){
         System.out.println("NEW CLIENT");
         try {
-            client = new MqttClient("tcp://35.225.233.75:1883", "Sending");
+            client = new MqttClient("tcp://34.65.245.151:1883", "Sending");
             client.connect();
             client.setCallback(this);
             client.subscribe("java/message");

@@ -49,7 +49,7 @@ kumuluzee:
     enabled: true
 app-properties:
   mqtt-broker:
-    url-connection: tcp://35.225.233.75:1883
+    url-connection: tcp://34.65.245.151:1883
     topic: java/message
   mongo:
     url-connection: mongodb://user:123456a@ds255728.mlab.com:55728/rso1920-messages?retryWrites=false
