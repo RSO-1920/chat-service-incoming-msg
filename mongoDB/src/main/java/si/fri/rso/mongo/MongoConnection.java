@@ -6,6 +6,7 @@ import com.mongodb.client.MongoDatabase;
 import si.fri.rso.config.AppConfigProperties;
 
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
@@ -19,7 +20,8 @@ public class MongoConnection {
 
     private MongoDatabase database;
 
-    public void init(@Observes @Initialized(ApplicationScoped.class) Object o){
+    @PostConstruct
+    public void init(){
         System.out.println("MONGO CONNECTION");
 
         MongoClientURI uri = new MongoClientURI(appConfigProperties.getMongoUrlConnection());

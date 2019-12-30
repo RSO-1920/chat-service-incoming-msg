@@ -29,7 +29,7 @@ public class IncomingMsgApi extends Application {
         final Set<Class<?>> resources = new HashSet<Class<?>>();
         resources.add(IncomingMsgController.class);
         resources.add(MessageListenerTest.class);
-        resources.add(MongoConnection.class);
+        // resources.add(MongoConnection.class);
         resources.add(LogContextInterceptor.class);
         HealthRegistry.getInstance().register(IsMongoUpCheck.class.getSimpleName(), new IsMongoUpCheck(), HealthCheckType.LIVENESS);
         HealthRegistry.getInstance().register(IsMqttUpCheck.class.getSimpleName(), new IsMqttUpCheck(), HealthCheckType.LIVENESS);
